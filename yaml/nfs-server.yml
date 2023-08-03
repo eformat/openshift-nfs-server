@@ -44,7 +44,7 @@ spec:
       storageClassName: $STORAGECLASS
       resources:
         requests:
-          storage: 6Gi
+          storage: $SIZE
 ---
 apiVersion: v1
 kind: Service

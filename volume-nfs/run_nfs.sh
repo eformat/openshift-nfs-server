@@ -35,7 +35,7 @@ function start()
         chmod 777 $NFSROOT
         chgrp $gid $NFSROOT
     fi
-    echo "$NFSROOT *(rw,fsid=0,insecure,no_root_squash,no_wdelay)" >> /etc/exports
+    echo "$NFSROOT *(rw,fsid=0,insecure,no_root_squash,no_wdelay,no_all_squash)" >> /etc/exports
   
     # start rpcbind if it is not started yet
     /usr/sbin/rpcinfo 127.0.0.1 > /dev/null; s=$?

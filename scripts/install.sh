@@ -4,7 +4,7 @@ PROJ=nfs
 IS=nfs-server
 APP=nfs-server
 SA=nfs-server
-STORAGECLASS=""
+STORAGECLASS="thin-csi"
 
 cd $(dirname $0)
 BASE=$(pwd)
@@ -34,16 +34,16 @@ if [ $? -eq 0 ]; then
   oc delete storageclass/managed-nfs-storage
 fi
 
-echo "iterating through storage classes"
+#echo "iterating through storage classes"
 
-for sc in $(oc get storageclass -o name); do
-  isdefault="$(oc get $sc -o jsonpath='{.metadata.annotations.storageclass\.kubernetes\.io/is-default-class}')"
-  if [ "$isdefault" == "true" ]; then
-    STORAGECLASS="$(echo $sc | cut -d / -f 2)"
-    echo "found current default storage class $STORAGECLASS"
-  fi
-  oc patch $sc -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "false"}}}'
-done
+# for sc in $(oc get storageclass -o name); do
+#   isdefault="$(oc get $sc -o jsonpath='{.metadata.annotations.storageclass\.kubernetes\.io/is-default-class}')"
+#   if [ "$isdefault" == "true" ]; then
+#     STORAGECLASS="$(echo $sc | cut -d / -f 2)"
+#     echo "found current default storage class $STORAGECLASS"
+#   fi
+#   oc patch $sc -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "false"}}}'
+# done
 
 if [ -n "$1" ]; then
   STORAGECLASS="$1"
@@ -62,16 +62,16 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-oc get project/${PROJ} &> /dev/null
-if [ $? -eq 0 ]; then
-    echo "${PROJ} project exists - remove it before re-executing $0"
-    exit 1
-fi
+#oc get project/${PROJ} &> /dev/null
+#if [ $? -eq 0 ]; then
+#    echo "${PROJ} project exists - remove it before re-executing $0"
+#    exit 1
+#fi
 
-set -e
+#set -e
 
 oc new-project $PROJ
-oc new-build --strategy docker --binary -n $PROJ --name $IS -l app=$APP
+oc new-build --binary --name=${IS} -n $PROJ
 oc start-build $IS -n $PROJ --from-dir ${BASE}/../volume-nfs --follow
 
 oc create -n $PROJ sa $SA

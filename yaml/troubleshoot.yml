@@ -5,7 +5,7 @@
 # 3. oc adm policy add-scc-to-user -z nfs-client privileged
 #
 # After the pod comes up, oc rsh into it and execute the following:
-# yum install -y nfs-utils
+# dnf -y install nfs-utils
 #
 # You can then try to mount from the server with the following command:
 # mount -o nolock,ro nfs-server.nfs.svc.cluster.local:/exports/0 /mnt
@@ -26,9 +26,9 @@ spec:
       labels:
         name: nfs-troubleshoot
     spec:
-      serviceAccountName: nfs-client
+      serviceAccountName: nfs-server
       containers:
-      - image: centos:7
+      - image: fedora
         command:
           - sh
           - -c
