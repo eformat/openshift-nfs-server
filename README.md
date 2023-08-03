@@ -14,3 +14,11 @@ To set this up, run the following script:
 You can test it with the client deployment in `yaml/nfs-client.yml`.
 
 If the client doesn't work, use the deployment in `yaml/troubleshoot.yml` to troubleshoot.
+
+
+## Quay
+
+```bash
+podman build -t quay.io/eformat/nfs:latest .
+podman push quay.io/eformat/nfs:latest
+```
